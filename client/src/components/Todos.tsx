@@ -193,7 +193,20 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                 </Button>
               </Grid.Column>
               {todo.attachmentUrl && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
+                <img 
+                  style={{
+                    width: '150px',
+                  }}
+                  id={`img-${pos}`}
+                  // document.querySelector(`img-${pos}`)
+                  src={todo.attachmentUrl} 
+                    onError={() => { 
+                      const myLogo = document.getElementById(`img-${pos}`)
+                      if (myLogo) 
+                      {
+                        myLogo.style.display = 'none'
+                      } 
+                    }}/>
               )}
               <Grid.Column width={16}>
                 <Divider />
