@@ -8,13 +8,14 @@ var AWSXRay = require('aws-xray-sdk');
 const XAWS = AWSXRay.captureAWS(AWS)
 const logger = createLogger('TodosAccess')
 
-// TODO: Implement the dataLayer logic
+// DATA Layer
 export class TodosAccess {
     constructor(
         private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
         private readonly todosTable = process.env.TODOS_TABLE,
     ) { }
 
+    // get all todos by user ID
     async getAllTodosByUserId(userId: string): Promise<TodoItem[]> {
         const result = await this.docClient
             .query({
@@ -28,6 +29,7 @@ export class TodosAccess {
         return result.Items as TodoItem[]
     }
 
+    // create todo item
     async createTodoItem(todoItem: TodoItem): Promise<TodoItem> {
         const result = await this.docClient
             .put({
@@ -39,6 +41,7 @@ export class TodosAccess {
         return todoItem as TodoItem
     }
 
+    //update todo item
     async updateTodoItem(userId: string, todoId: string, todoUpdate: TodoUpdate): Promise<TodoUpdate> {
         await this.docClient
             .update({
@@ -62,6 +65,7 @@ export class TodosAccess {
         return todoUpdate as TodoUpdate
     }
 
+    //delete todo item
     async deleteTodoItem(todoId: string, userId: string): Promise<string> {
         await this.docClient
             .delete({
@@ -75,6 +79,7 @@ export class TodosAccess {
         return todoId as string
     }
 
+    // get todo item by user id and todo id
     async getTodoByUserIdAndTodoId(userId: string, todoId: string): Promise<TodoItem> {
         logger.info(`Getting todo item: ${todoId}`);
         const result = await this.docClient
@@ -91,8 +96,9 @@ export class TodosAccess {
         return todoItem as TodoItem;
     }
 
+
     async updateTodoByUserIdAndTodoId(userId: string, todoId: string, updateData: TodoUpdate): Promise<void> {
-        logger.info(`Updating a todo item: ${todoId}`);
+        logger.info(`Updating todo item: ${todoId}`);
         await this.docClient
             .update({
                 TableName: this.todosTable,
